@@ -9,9 +9,9 @@ services:
               python manage.py migrate &&
               python manage.py collectstatic --noinput &&
               python manage.py seed_all &&
-             uvicorn project.asgi:application --host 0.0.0.0 --port 8000"
+             uvicorn project.asgi:application --host 0.0.0.0 --port 4000"
     ports:
-      - "8000:8000"
+      - "4000:4000"
     volumes:
       - ./backend/uploads:/app/uploads
       # - ./backend/db.sqlite3:/app/db.sqlite3
@@ -21,7 +21,7 @@ services:
     restart: unless-stopped
 
     healthcheck:
-      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/', timeout=2).read()\""]
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:4000/health/', timeout=2).read()\""]
       interval: 10s
       timeout: 3s
       retries: 5
