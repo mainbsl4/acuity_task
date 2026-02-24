@@ -8,12 +8,13 @@ services:
       sh -c "python manage.py makemigrations &&
               python manage.py migrate &&
               python manage.py collectstatic --noinput &&
+              python manage.py seed_all &&
              uvicorn project.asgi:application --host 0.0.0.0 --port 8000"
     ports:
       - "8000:8000"
     volumes:
       - ./backend/uploads:/app/uploads
-      - ./backend/db.sqlite3:/app/db.sqlite3
+      # - ./backend/db.sqlite3:/app/db.sqlite3
     environment:
       PYTHONDONTWRITEBYTECODE: "1"
       PYTHONUNBUFFERED: "1"
@@ -28,4 +29,18 @@ services:
       - "3000:80"
     # depends_on:
     #   - backend
+    restart: unless-stopped
+
+
+
+  reverse-proxy:
+    container_name: reverse-proxy
+    image: nginx:1.27-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - frontend
+      - backend
     restart: unless-stopped
