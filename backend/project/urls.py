@@ -27,6 +27,7 @@ def health(_request):
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("health/", health),
+    path("", include('django_prometheus.urls')),
     path("api/v1/", include("apps.users.urls")),
     path("api/v1/", include("apps.cms.urls")),
     path("api/v1/", include("apps.system_settings.urls")),
